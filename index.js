@@ -9,14 +9,29 @@ const PORT = process.env.PORT || 3000;
 const WEBHOOK_URL = process.env.WEBHOOK;
 const BOT_TOKEN = process.env.TOKEN;
 
+// Funzione per inviare i log al webhook
+function sendLogToWebhook(message) {
+    if (!WEBHOOK_URL) {
+        console.error('Webhook URL not set in .env');
+        return;
+    }
+    fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: message })
+    }).catch(err => console.error('Failed to send log to webhook:', err));
+}
+
+// Web server per Uptime Robot
 app.get('/', (req, res) => {
-    res.send('<h1>alive</h1>');
+    res.send('<h1>Vivo</h1>');  // Mostra la scritta "Vivo"
 });
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+// Bot code (resta invariato)
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
