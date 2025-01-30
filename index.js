@@ -1,21 +1,21 @@
-require('dotenv').config();
+const express = require('express');
 const { Client, GatewayIntentBits, AttachmentBuilder } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 const WEBHOOK_URL = process.env.WEBHOOK;
 const BOT_TOKEN = process.env.TOKEN;
 
-function sendLogToWebhook(message) {
-    if (!WEBHOOK_URL) {
-        console.error('Webhook URL not set in .env');
-        return;
-    }
-    fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: message })
-    }).catch(err => console.error('Failed to send log to webhook:', err));
-}
+app.get('/', (req, res) => {
+    res.send('<h1>alive</h1>');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 
 const client = new Client({
     intents: [
@@ -46,7 +46,6 @@ async function updateBotStatus() {
             status: 'online',
         });
         console.log(`Updated bot status to: ${memberCount} members`);
-        // sendLogToWebhook(`Update: ${memberCount}`); // Uncomment this line to send a status log to the webhook
     } catch (error) {
         console.error('Error updating bot status:', error);
         sendLogToWebhook(`Error updating: ${error.message}`);
@@ -65,7 +64,6 @@ client.on('guildMemberRemove', async member => {
 
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
-
     const { commandName, options } = interaction;
 
     if (commandName === 'danify') {
@@ -104,7 +102,6 @@ client.on('interactionCreate', async interaction => {
 
             if (emoji) {
                 let emojiUrl = `https://emojicdn.elk.sh/${encodeURIComponent(emoji)}`;
-                
                 if (style === 'ios') {
                     emojiUrl += '?style=apple';
                 } else if (style === 'android') {
