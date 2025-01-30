@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "discord.js": "^14.17.3",
+    "dotenv": "^16.4.7",
     "jimp": "^1.6.0",
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^3.3.2",
